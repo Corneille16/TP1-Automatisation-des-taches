@@ -1,10 +1,11 @@
+import argparse
+import csv
 import os
 import zipfile
 from datetime import datetime
+
 import psutil
-import argparse
-import win32api
-import win32file
+#import win32api
 
 
 def get_disk():
@@ -45,8 +46,26 @@ def creer_archive_zip(cle_usb, dossier_sauvegarde):
 
     print(f"Fichier sauvegardé : {archive_path}")
 
+def effacer(cle_usb):
+    for root, dirs, files in os.walk(cle_usb):
+        for file in files:
+            os.remove(os.path.join(root, file))
+        for name in dirs:
+            os.rmdir(os.path.join(root, name))
+
+def historique(nom_archive, fichier_sauvegarde, timestamp):
+    if not os.path.exists('historique.csv'):
+        with open('historique.csv', 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(["Nom de l'archive", 'Nom du fichier sauvegardé', 'Timestamp'])
+
+    with open('historique.csv', 'a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow([nom_archive, fichier_sauvegarde, timestamp])
+
+
 
 if __name__ == "__main__":
-    disques = get_disk()
-    for disque in disques:
-        creer_archive_zip(disque, "sauvegarde")
+  disque = get_disk()
+  print(disque)
+
