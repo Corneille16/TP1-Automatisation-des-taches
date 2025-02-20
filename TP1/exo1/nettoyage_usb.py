@@ -113,4 +113,14 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    #main()
+    drives = win32api.GetLogicalDriveStrings().split('\x00')[:-1]
+    usb_labels = {}
+    for drive in drives:
+        try:
+            label = win32api.GetVolumeInformation(drive)[0]  # Nom du volume
+            usb_labels[drive] = label
+        except:
+            pass
+    print(usb_labels)
+
